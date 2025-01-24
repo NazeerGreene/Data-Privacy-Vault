@@ -1,6 +1,9 @@
 package com.example.demo.repository;
 
+import lombok.NonNull;
+
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Database {
     // mock database: String user-id, List: (token, data)
@@ -10,27 +13,54 @@ public class Database {
         database = new HashMap<>();
     }
 
-    public static Optional<String> createUser(String userId) {
-        return Optional.empty();
+    public static Optional<String> createUser(@NonNull String userId) {
+        if (userExists(userId)) {
+            return Optional.empty();
+        }
+
+        database.put(userId, new ArrayList<>());
+
+        return Optional.of(userId);
     }
 
-    public static boolean userExists(String userId) {
+    public static boolean userExists(@NonNull String userId) {
+        for(String id: database.keySet()) {
+            if (id.equals(userId)) {
+                return true;
+            }
+        }
+
         return false;
     }
 
-    public static void addDataFor(String id, TokenizedData data) {
-
+    public static void addDataFor(@NonNull String userId, TokenizedData data) {
+        if (userExists(userId)) {
+            database.get(userId).add(data);
+        }
     }
 
-    public static List<TokenizedData> getAllDataFor(String id) {
-        return null;
+    public static List<TokenizedData> getAllDataFor(@NonNull String userId) {
+        return Optional.ofNullable(database.get(userId))
+                .orElseGet(Collections::emptyList);
     }
 
-    public static List<TokenizedData> getDataFor(String id, Set<String> tokens) {
-        return null;
+    public static List<TokenizedData> getDataFor(@NonNull String userId, @NonNull Set<String> tokens) {
+        return getAllDataFor(userId)
+                .stream()
+                .filter(td -> tokens.contains(td.token()))
+                .collect(Collectors.toList());
     }
 
-    public static void updateDataFor(String id, TokenizedData data) {
+    public static boolean updateDataFor(@NonNull String userId, TokenizedData data) {
+        List<TokenizedData> userData = getAllDataFor(userId);
+        if (removeDataFor(userId, data)) {
+            return userData.add(data);
+        }
+        return false;
+    }
 
+    public static boolean removeDataFor(@NonNull String userId, TokenizedData data) {
+        List<TokenizedData> userData = getAllDataFor(userId);
+        return userData.remove(data);
     }
 }
