@@ -1,5 +1,7 @@
 package com.example.demo.utils;
 
+import lombok.NonNull;
+
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -13,12 +15,12 @@ public class MessageDigestImpl implements TokenGenerator {
         digest = MessageDigest.getInstance("SHA-256");
     }
 
-    public MessageDigestImpl(String algorithm) throws NoSuchAlgorithmException {
+    public MessageDigestImpl(@NonNull String algorithm) throws NoSuchAlgorithmException {
         digest = MessageDigest.getInstance(algorithm);
     }
 
     @Override
-    public String tokenize(String data) {
+    public String tokenize(@NonNull String data) {
         // convert string to bytes
         byte[] bytes = data.getBytes(StandardCharsets.UTF_8);
         // run through hash algorithm
