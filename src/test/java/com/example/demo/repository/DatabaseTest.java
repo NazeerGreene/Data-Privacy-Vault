@@ -104,27 +104,6 @@ class DatabaseTest {
     }
 
     @Test
-    void shouldUpdateDataForUser() {
-        String user = "abc-5";
-        String tokenToUpdate = "token-01";
-        TokenizedData
-                data1 = new TokenizedData(tokenToUpdate, "random random"),
-                data2 = new TokenizedData("token-02", "even more random"),
-                data3 = new TokenizedData("token-03", "some more random");
-
-        Database.createUser(user);
-        Database.addDataFor(user, data1);
-        Database.addDataFor(user, data2);
-        Database.addDataFor(user, data3);
-
-        Database.updateDataFor(user, new TokenizedData(tokenToUpdate, "whatever"));
-
-        List<TokenizedData> allData = Database.getAllDataFor(user);
-
-        assertEquals("whatever", allData.getLast().data());
-    }
-
-    @Test
     void shouldRemoveDataForUser() {
         String user = "abc-6";
         String tokenToDelete = "token-01";

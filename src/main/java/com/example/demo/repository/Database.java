@@ -51,14 +51,6 @@ public class Database {
                 .collect(Collectors.toList());
     }
 
-    public static boolean updateDataFor(@NonNull String userId, TokenizedData data) {
-        List<TokenizedData> userData = getAllDataFor(userId);
-        if (removeDataFor(userId, data)) {
-            return userData.add(data);
-        }
-        return false;
-    }
-
     public static boolean removeDataFor(@NonNull String userId, TokenizedData data) {
         List<TokenizedData> userData = getAllDataFor(userId);
         return userData.remove(data);
