@@ -1,12 +1,15 @@
 package com.example.demo.utils;
 
 import lombok.NonNull;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+@Component
 public class MessageDigestImpl implements TokenGenerator {
 
     private final MessageDigest digest;
