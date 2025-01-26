@@ -11,9 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Map;
-
 @RestController
 public class TokenController {
 
@@ -32,16 +29,14 @@ public class TokenController {
     public ResponseEntity<RequestPayload> tokenizePayload(@RequestBody RequestPayload payload) {
         System.out.println(payload);
 
-        if (!Database.userExists(payload.id())) {
-            Database.createUser(payload.id());
+        if (!Database.userExists(payload.userId())) {
+            Database.createUser(payload.userId());
         }
 
         tokenService.createNewToken(payload);
         // 200 if success; fail otherwise
 
-        for(String key: payload.data().keySet()) {
-            payload.data().compute(key, (k, v) -> this.tokenGenerator.tokenize(v));
-        }
+
 
         return ResponseEntity.ok(payload);
     }
@@ -50,7 +45,7 @@ public class TokenController {
     public ResponseEntity<String> detokenizePayload(@RequestBody RequestPayload payload) {
         System.out.println(payload);
 
-        if (!Database.userExists(payload.id())) {
+        if (!Database.userExists(payload.userId())) {
             // fail
         }
 

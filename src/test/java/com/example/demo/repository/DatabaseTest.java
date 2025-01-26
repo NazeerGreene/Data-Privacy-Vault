@@ -34,7 +34,7 @@ class DatabaseTest {
     void shouldAddAndFindDataForUser() {
         String user = "abc-1";
         String token = "token-123";
-        String randomData = "random data";
+        String randomData = "random value";
 
         TokenizedData data = new TokenizedData(token, randomData);
 
@@ -46,14 +46,14 @@ class DatabaseTest {
 
         assertEquals(1, receivedData.size());
         assertEquals(token, receivedData.getFirst().token());
-        assertEquals(randomData, receivedData.getFirst().data());
+        assertEquals(randomData, receivedData.getFirst().value());
     }
 
     @Test
     void shouldNotFindDataForNonExistentUser() {
         String invalidUser = "abc-2!!!";
         String token = "token-123";
-        String randomData = "random data";
+        String randomData = "random value";
 
         TokenizedData data = new TokenizedData(token, randomData);
 

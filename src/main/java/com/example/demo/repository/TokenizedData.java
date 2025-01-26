@@ -2,7 +2,7 @@ package com.example.demo.repository;
 
 import java.util.Objects;
 
-public record TokenizedData(String token, String data) {
+public record TokenizedData(String token, String value) {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -12,6 +12,6 @@ public record TokenizedData(String token, String data) {
 
     @Override
     public int hashCode() {
-        return Objects.hash(token, data);
+        return Objects.hash(token, value);
     }
 }

@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Database {
-    // mock database: String user-id, List: (token, data)
+    // mock database: String user-userId, List: (token, value)
     private static final Map<String, List<TokenizedData>> database;
 
     static {
