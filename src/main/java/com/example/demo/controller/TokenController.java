@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.RequestPayload;
+import com.example.demo.model.ResponsePayload;
 import com.example.demo.repository.Database;
 import com.example.demo.service.TokenService;
 import com.example.demo.service.UserService;
@@ -25,7 +26,7 @@ public class TokenController {
         this.tokenGenerator = tokenGenerator;
     }
 
-    @PostMapping("/tokenizer")
+    @PostMapping("/tokenize")
     public ResponseEntity<RequestPayload> tokenizePayload(@RequestBody RequestPayload payload) {
         System.out.println(payload);
 
@@ -33,7 +34,7 @@ public class TokenController {
             Database.createUser(payload.userId());
         }
 
-        tokenService.createNewToken(payload);
+        tokenService.createNewTokens(payload);
         // 200 if success; fail otherwise
 
 
@@ -41,8 +42,8 @@ public class TokenController {
         return ResponseEntity.ok(payload);
     }
 
-    @PostMapping("/detokenizer")
-    public ResponseEntity<String> detokenizePayload(@RequestBody RequestPayload payload) {
+    @PostMapping("/detokenize")
+    public ResponseEntity<RequestPayload> detokenizePayload(@RequestBody RequestPayload payload) {
         System.out.println(payload);
 
         if (!Database.userExists(payload.userId())) {
@@ -51,5 +52,7 @@ public class TokenController {
 
         tokenService.detokenize(payload);
         // ResponsePayload for all tokens
+
+        return ResponseEntity.ok(payload);
     }
 }

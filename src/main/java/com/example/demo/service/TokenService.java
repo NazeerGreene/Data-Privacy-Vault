@@ -5,13 +5,11 @@ import com.example.demo.model.TokenFoundField;
 import com.example.demo.model.ResponsePayload;
 import com.example.demo.repository.Database;
 import com.example.demo.repository.TokenizedData;
-import com.example.demo.utils.MessageDigestImpl;
 import com.example.demo.utils.TokenGenerator;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -20,21 +18,17 @@ import java.util.stream.Stream;
 public class TokenService {
     private final TokenGenerator tokenGenerator;
 
-    public TokenService() throws NoSuchAlgorithmException {
-        this.tokenGenerator = new MessageDigestImpl();
-    }
-
     @Autowired
     public TokenService(TokenGenerator tokenGenerator) {
         this.tokenGenerator = tokenGenerator;
     }
 
-    public RequestPayload createNewToken(@NonNull RequestPayload request) {
+    public RequestPayload createNewTokens(@NonNull RequestPayload request) {
         String userId = request.userId();
         RequestPayload response = new RequestPayload(userId, new HashMap<>());
 
-        for(String key: request.data().keySet()) {
-            String rawValue = clean(request.data().get(key));
+        for(String field: request.data().keySet()) {
+            String rawValue = clean(request.data().get(field));
 
             if (!rawValue.isEmpty()) {
                 String token = this.tokenGenerator.tokenize(rawValue);
@@ -42,9 +36,9 @@ public class TokenService {
                 TokenizedData dataToStore = new TokenizedData(token, rawValue);
                 Database.addDataFor(userId, dataToStore);
 
-                response.data().put(key, token);
+                response.data().put(field, token);
             } else {
-                response.data().put(key, rawValue);
+                response.data().put(field, rawValue);
             }
         }
         return response;

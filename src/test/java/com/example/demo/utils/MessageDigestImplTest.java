@@ -30,4 +30,15 @@ class MessageDigestImplTest {
 
         assertEquals(verifiedToken, token);
     }
+
+    @Test
+    void shouldPadStringWithZeroLead() throws NoSuchAlgorithmException {
+        String name = "value2";
+        String verifiedToken = "0537d481f73a757334328052da3af9626ced97028e20b849f6115c22cd765197";
+
+        MessageDigestImpl tokenizer = new MessageDigestImpl();
+        String token = tokenizer.tokenize(name);
+
+        assertEquals(verifiedToken, token);
+    }
 }

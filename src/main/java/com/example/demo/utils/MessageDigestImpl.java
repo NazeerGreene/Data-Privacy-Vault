@@ -29,10 +29,10 @@ public class MessageDigestImpl implements TokenGenerator {
         // run through hash algorithm
         byte[] hashedBytes = digest.digest(bytes);
         // convert bin to hex and return
-        return toHexString(hashedBytes, digest.getDigestLength());
+        return toHexString(hashedBytes);
     }
 
-    private String toHexString(byte[] bytes, int digestLength) {
+    private String toHexString(byte[] bytes) {
         // convert the byte stream into signum representation;
         // this guarantees a positive representation of the hash
         BigInteger num = new BigInteger(1, bytes);
@@ -40,8 +40,8 @@ public class MessageDigestImpl implements TokenGenerator {
         // convert to base 16 representation
         StringBuilder hexString = new StringBuilder(num.toString(16));
 
-        // padding, optional
-        while (hexString.length() < digestLength) {
+        // padding, optional (1 octet = 2 hex char)
+        while (hexString.length() < digest.getDigestLength() * 2) {
             hexString.insert(0, '0');
         }
 
