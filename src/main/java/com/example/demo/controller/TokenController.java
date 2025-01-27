@@ -7,6 +7,7 @@ import com.example.demo.service.TokenService;
 import com.example.demo.service.UserService;
 import com.example.demo.utils.TokenGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,32 +28,26 @@ public class TokenController {
     }
 
     @PostMapping("/tokenize")
-    public ResponseEntity<RequestPayload> tokenizePayload(@RequestBody RequestPayload payload) {
-        System.out.println(payload);
-
-        if (!Database.userExists(payload.userId())) {
-            Database.createUser(payload.userId());
+    public ResponseEntity<RequestPayload> tokenizePayload(@RequestBody RequestPayload request) {
+        if (!Database.userExists(request.userId())) {
+            Database.createUser(request.userId());
         }
 
-        tokenService.createNewTokens(payload);
-        // 200 if success; fail otherwise
+        RequestPayload response = tokenService.createNewTokens(request);
 
-
-
-        return ResponseEntity.ok(payload);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PostMapping("/detokenize")
-    public ResponseEntity<RequestPayload> detokenizePayload(@RequestBody RequestPayload payload) {
-        System.out.println(payload);
+    public ResponseEntity<ResponsePayload> detokenizePayload(@RequestBody RequestPayload request) {
+        System.out.println(request);
 
-        if (!Database.userExists(payload.userId())) {
-            // fail
+        if (!Database.userExists(request.userId())) {
+            return ResponseEntity.badRequest().build();
         }
 
-        tokenService.detokenize(payload);
-        // ResponsePayload for all tokens
+        ResponsePayload response = tokenService.detokenize(request);
 
-        return ResponseEntity.ok(payload);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
